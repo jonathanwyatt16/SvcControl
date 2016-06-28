@@ -1,5 +1,5 @@
 @ECHO off
-SETLOCAL
+SETLOCAL EnableDelayedExpansion
 
 SET command=%3
 IF "%command%"=="start" GOTO :SvcControl_start
@@ -30,6 +30,7 @@ GOTO :EOF
 :SvcControl_start
 FOR /F "" %%A IN (%1) DO (
 	FOR /F "" %%B IN (%2) DO (
+		ECHO Starting %%B on %%A
 		sc \\%%A start %%B > HiddenOutput.txt
 	)
 )
@@ -39,6 +40,7 @@ GOTO :SvcControl_status
 :SvcControl_stop
 FOR /F "" %%A IN (%1) DO (
 	FOR /F "" %%B IN (%2) DO (
+		ECHO Stopping %%B on %%A
 		sc \\%%A stop %%B > HiddenOutput.txt
 	)
 )
@@ -46,12 +48,20 @@ DEL /Q HiddenOutput.txt
 
 :SvcControl_status
 ECHO.
-ECHO SERVER		SERVICE		STATUS
-ECHO ------		-------		------
+ECHO SERVER               SERVICE              STATUS
+ECHO ------               -------              ------
 FOR /F "" %%A IN (%1) DO (
 	FOR /F "" %%B IN (%2) DO (
 		FOR /f "tokens=1-3 delims=: " %%C IN ('sc \\%%A query %%B') DO (
-			IF %%C==STATE (ECHO %%A		%%B		%%E))
+			IF %%C==STATE (
+				SET "svr=%%A                                  "
+				SET "svr=!svr:~0,20!"
+				SET "svc=%%B                                  "
+				SET "svc=!svc:~0,20!"
+				SET "ste=%%E"
+				ECHO !svr! !svc! !ste!
+			)
+		)
 	)
 )
 ENDLOCAL
