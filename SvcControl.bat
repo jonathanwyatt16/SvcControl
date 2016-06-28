@@ -23,7 +23,7 @@ ECHO 	[command]---------The command to execute.
 ECHO.
 ECHO 	COMMANDS:
 ECHO 	start-------------Start the service.
-ECHO 	stcommand---------Stop the service.
+ECHO 	stop--------------Stop the service.
 ECHO 	status------------Print the status of the service.
 GOTO :EOF
 
