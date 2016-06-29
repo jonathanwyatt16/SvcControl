@@ -31,20 +31,20 @@ GOTO :EOF
 FOR /F "" %%A IN (%1) DO (
 	FOR /F "" %%B IN (%2) DO (
 		ECHO Starting %%B on %%A
-		sc \\%%A start %%B > HiddenOutput.txt
+		sc \\%%A start %%B > .hiddenoutput
 	)
 )
-DEL /Q HiddenOutput.txt
+DEL /Q .hiddenoutput
 GOTO :SvcControl_status
 
 :SvcControl_stop
 FOR /F "" %%A IN (%1) DO (
 	FOR /F "" %%B IN (%2) DO (
 		ECHO Stopping %%B on %%A
-		sc \\%%A stop %%B > HiddenOutput.txt
+		sc \\%%A stop %%B > .hiddenoutput
 	)
 )
-DEL /Q HiddenOutput.txt
+DEL /Q .hiddenoutput
 
 :SvcControl_status
 ECHO.
