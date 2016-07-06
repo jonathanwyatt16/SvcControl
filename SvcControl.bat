@@ -31,37 +31,43 @@ GOTO :EOF
 FOR /F "" %%A IN (%1) DO (
 	FOR /F "" %%B IN (%2) DO (
 		ECHO Starting %%B on %%A
-		sc \\%%A start %%B > .hiddenoutput
+		sc \\%%A start %%B > NUL
 	)
 )
-DEL /Q .hiddenoutput
 GOTO :SvcControl_status
 
 :SvcControl_stop
 FOR /F "" %%A IN (%1) DO (
 	FOR /F "" %%B IN (%2) DO (
 		ECHO Stopping %%B on %%A
-		sc \\%%A stop %%B > .hiddenoutput
+		sc \\%%A stop %%B > NUL
 	)
 )
-DEL /Q .hiddenoutput
 
 :SvcControl_status
 ECHO.
-ECHO SERVER               SERVICE              STATUS
-ECHO ------               -------              ------
+ECHO SERVER              SERVICE             START TYPE          STATUS
+ECHO ------              -------             ----------          ------
 FOR /F "" %%A IN (%1) DO (
 	FOR /F "" %%B IN (%2) DO (
-		FOR /f "tokens=1-3 delims=: " %%C IN ('sc \\%%A query %%B') DO (
-			IF %%C==STATE (
-				SET "svr=%%A                                  "
-				SET "svr=!svr:~0,20!"
-				SET "svc=%%B                                  "
-				SET "svc=!svc:~0,20!"
-				SET "ste=%%E"
-				ECHO !svr! !svc! !ste!
+		SET "svr=%%A                                  "
+		SET "svr=!svr:~0,20!"
+		SET "svc=%%B                                  "
+		SET "svc=!svc:~0,20!"
+		FOR /f "tokens=1-3 delims=: " %%C IN ('sc \\%%A qc %%B') DO (
+			IF %%C==START_TYPE (
+				SET "stt=%%E                                  "
+				SET "stt=!stt:~0,20!"
 			)
 		)
+		
+		FOR /f "tokens=1-3 delims=: " %%C IN ('sc \\%%A query %%B') DO (
+			IF %%C==STATE (
+				SET "ste=%%E"	
+			)
+		)
+		
+		ECHO !svr!!svc!!stt!!ste!
 	)
 )
 ENDLOCAL
