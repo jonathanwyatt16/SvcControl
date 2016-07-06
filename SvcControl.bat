@@ -54,6 +54,7 @@ FOR /F "" %%A IN (%1) DO (
 		SET "svr=!svr:~0,20!"
 		SET "svc=%%B                                  "
 		SET "svc=!svc:~0,20!"
+	
 		FOR /f "tokens=1-3 delims=: " %%C IN ('sc \\%%A qc %%B') DO (
 			IF %%C==START_TYPE (
 				SET "stt=%%E                                  "
