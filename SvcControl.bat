@@ -10,17 +10,17 @@ IF "%command%"=="info" GOTO :SvcControl_info
 :SvcControl_help
 ECHO.
 ECHO DESCRIPTION:
-ECHO 	SvcControl starts, stops, or information regarding of a list 
+ECHO 	SvcControl starts, stops, or prints the status of a list 
 ECHO 	of services on a list of servers.
 ECHO.	 
 ECHO USAGE:
 ECHO 	SvcControl [server list] [service list] [command]
 ECHO 	EX: SvcControl servers.txt services.txt start
 ECHO.
-ECHO 	PARAMETERS:
+ECHO 	ARGUMENTS:
 ECHO 	[server list]-----.txt file with hostnames of servers to target.
 ECHO 	[service list]----.txt file with names of services to target.
-ECHO 	[command]---------The command to execute.
+ECHO 	[command]---------One of the following four commands.
 ECHO.
 ECHO 	COMMANDS:
 ECHO 	start-------------Start the service.
