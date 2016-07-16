@@ -5,11 +5,12 @@ SET command=%3
 IF "%command%"=="start" GOTO :SvcControl_start
 IF "%command%"=="stop" GOTO :SvcControl_stop
 IF "%command%"=="status" GOTO :SvcControl_status
+IF "%command%"=="info" GOTO :SvcControl_info
 
 :SvcControl_help
 ECHO.
 ECHO DESCRIPTION:
-ECHO 	SvcControl starts, stops, or prints the status of a list 
+ECHO 	SvcControl starts, stops, or information regarding of a list 
 ECHO 	of services on a list of servers.
 ECHO.	 
 ECHO USAGE:
@@ -25,6 +26,7 @@ ECHO 	COMMANDS:
 ECHO 	start-------------Start the service.
 ECHO 	stop--------------Stop the service.
 ECHO 	status------------Print the status of the service.
+ECHO 	info--------------Print the start type and max memory of the service.
 GOTO :EOF
 
 :SvcControl_start
@@ -43,24 +45,18 @@ FOR /F "" %%A IN (%1) DO (
 		sc \\%%A stop %%B > NUL
 	)
 )
+GOTO :SvcControl_status
 
 :SvcControl_status
 ECHO.
-ECHO SERVER              SERVICE             START TYPE          STATUS
-ECHO ------              -------             ----------          ------
+ECHO SERVER              SERVICE             STATUS
+ECHO ------              -------             ------
 FOR /F "" %%A IN (%1) DO (
 	FOR /F "" %%B IN (%2) DO (
 		SET "svr=%%A                                  "
 		SET "svr=!svr:~0,20!"
 		SET "svc=%%B                                  "
 		SET "svc=!svc:~0,20!"
-	
-		FOR /f "tokens=1-3 delims=: " %%C IN ('sc \\%%A qc %%B') DO (
-			IF %%C==START_TYPE (
-				SET "stt=%%E                                  "
-				SET "stt=!stt:~0,20!"
-			)
-		)
 		
 		FOR /f "tokens=1-3 delims=: " %%C IN ('sc \\%%A query %%B') DO (
 			IF %%C==STATE (
@@ -68,7 +64,35 @@ FOR /F "" %%A IN (%1) DO (
 			)
 		)
 		
-		ECHO !svr!!svc!!stt!!ste!
+		ECHO !svr!!svc!!ste!
+	)
+)
+GOTO :EOF
+
+:SvcControl_info
+ECHO.
+ECHO SERVER              SERVICE             START TYPE          MAX MEMORY (MB)
+ECHO ------              -------             ----------          ---------------
+FOR /F "" %%A IN (%1) DO (
+	FOR /F "" %%B IN (%2) DO (
+		SET "svr=%%A                                  "
+		SET "svr=!svr:~0,20!"
+		SET "svc=%%B                                  "
+		SET "svc=!svc:~0,20!"
+		
+		FOR /f "tokens=1-3 delims=: " %%C IN ('sc \\%%A qc %%B') DO (
+			IF %%C==START_TYPE (
+				SET "stt=%%E                                  "
+				SET "stt=!stt:~0,20!"
+			)
+		)
+		
+		SET "mm="
+		FOR /f "tokens=3*" %%D IN ('REG QUERY "HKLM\SOFTWARE\Wow6432Node\Apache Software Foundation\Procrun 2.0\%%B\Parameters\Java" /v JvmMx 2^>NUL') DO (
+			set /a "mm=%%D"
+		)
+
+		ECHO !svr!!svc!!stt!!mm!
 	)
 )
 ENDLOCAL
