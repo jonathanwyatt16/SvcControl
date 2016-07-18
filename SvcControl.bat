@@ -58,6 +58,7 @@ FOR /F "" %%A IN (%1) DO (
 		SET "svc=%%B                                  "
 		SET "svc=!svc:~0,20!"
 		
+		SET "ste=Not Found" 
 		FOR /f "tokens=1-3 delims=: " %%C IN ('sc \\%%A query %%B') DO (
 			IF %%C==STATE (
 				SET "ste=%%E"	
@@ -80,6 +81,7 @@ FOR /F "" %%A IN (%1) DO (
 		SET "svc=%%B                                  "
 		SET "svc=!svc:~0,20!"
 		
+		SET "stt=Not Found           "
 		FOR /f "tokens=1-3 delims=: " %%C IN ('sc \\%%A qc %%B') DO (
 			IF %%C==START_TYPE (
 				SET "stt=%%E                                  "
