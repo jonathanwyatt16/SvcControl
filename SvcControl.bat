@@ -88,7 +88,7 @@ FOR /F "" %%A IN (%1) DO (
 		)
 		
 		SET "mm=Not Found"
-		FOR /f "tokens=3*" %%D IN ('REG QUERY "\\%%A\HKLM\SOFTWARE\Wow6432Node\Apache Software Foundation\Procrun 2.0\%%B\Parameters\Java" /v JvmMx 2^>NUL') DO (
+		FOR /f "tokens=3" %%D IN ('REG QUERY "\\%%A\HKLM\SOFTWARE\Wow6432Node\Apache Software Foundation\Procrun 2.0\%%B\Parameters\Java" /v JvmMx 2^>NUL') DO (
 			set /a "mm=%%D"
 		)
 
