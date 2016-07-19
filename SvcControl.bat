@@ -5,6 +5,8 @@ SET command=%3
 IF "%command%"=="start" GOTO :SvcControl_start
 IF "%command%"=="stop" GOTO :SvcControl_stop
 IF "%command%"=="status" GOTO :SvcControl_status
+IF "%command%"=="enable" GOTO :SvcControl_enable
+IF "%command%"=="disable" GOTO :SvcControl_disable
 IF "%command%"=="info" GOTO :SvcControl_info
 
 :SvcControl_help
@@ -20,12 +22,14 @@ ECHO.
 ECHO 	ARGUMENTS:
 ECHO 	[server list]-----.txt file with hostnames of servers to target.
 ECHO 	[service list]----.txt file with names of services to target.
-ECHO 	[command]---------One of the following four commands.
+ECHO 	[command]---------One of the following six commands.
 ECHO.
 ECHO 	COMMANDS:
 ECHO 	start-------------Start the service.
 ECHO 	stop--------------Stop the service.
 ECHO 	status------------Print the status of the service.
+ECHO 	enable------------Set the service start type to disabled.
+ECHO 	disable-----------Set the service start type to auto.
 ECHO 	info--------------Print the start type and max memory of the service.
 GOTO :EOF
 
@@ -69,6 +73,24 @@ FOR /F "" %%A IN (%1) DO (
 	)
 )
 GOTO :EOF
+
+:SvcControl_enable
+FOR /F "" %%A IN (%1) DO (
+	FOR /F "" %%B IN (%2) DO (
+		ECHO Enabling %%B on %%A
+		sc \\%%A config %%B start=auto> NUL
+	)
+)
+GOTO :SvcControl_info
+
+:SvcControl_disable
+FOR /F "" %%A IN (%1) DO (
+	FOR /F "" %%B IN (%2) DO (
+		ECHO Disabling %%B on %%A
+		sc \\%%A config %%B start=disabled> NUL
+	)
+)
+GOTO :SvcControl_info
 
 :SvcControl_info
 ECHO.
