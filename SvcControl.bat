@@ -28,8 +28,8 @@ ECHO 	COMMANDS:
 ECHO 	start-------------Start the service.
 ECHO 	stop--------------Stop the service.
 ECHO 	status------------Print the status of the service.
-ECHO 	enable------------Set the service start type to disabled.
-ECHO 	disable-----------Set the service start type to auto.
+ECHO 	enable------------Set the service start type to auto.
+ECHO 	disable-----------Set the service start type to disabled.
 ECHO 	info--------------Print the start type and max memory of the service.
 GOTO :EOF
 
