@@ -19,7 +19,7 @@ ECHO USAGE:
 ECHO 	SvcControl [server list] [service list] [command]
 ECHO 	EX: SvcControl servers.txt services.txt start
 ECHO.
-ECHO 	ARGUMENTS:
+ECHO 	PARAMETERS:
 ECHO 	[server list]-----.txt file with hostnames of servers to target.
 ECHO 	[service list]----.txt file with names of services to target.
 ECHO 	[command]---------One of the following six commands.
